@@ -14,6 +14,4 @@ class ProductRepository extends AbstractModelRepository implements IProduct
         parent::__construct($model);
     }
 
-
-
 }
