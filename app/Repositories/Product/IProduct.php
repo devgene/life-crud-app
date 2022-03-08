@@ -6,5 +6,5 @@ use App\Repositories\Model\IModelRepository;
 
 interface IProduct extends IModelRepository
 {
-
+    public function create($request);
 }

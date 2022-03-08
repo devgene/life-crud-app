@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
 use App\Repositories\Product\IProduct;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $this->repo->get();
     }
 
     /**
@@ -33,7 +34,6 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -42,9 +42,10 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        $product = $this->repo->create($request->validated());
+        return $this->success($product,'successfully created');
     }
 
     /**
