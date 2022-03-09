@@ -1,18 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductRequest;
-use App\Repositories\Product\IProduct;
+use App\Models\Order;
+use App\Repositories\Order\IOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
+
 
     private $repo;
 
-    public function __construct(IProduct $repo)
+    public function __construct(IOrder $repo)
     {
         $this->repo = $repo;
     }
@@ -24,7 +28,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $this->repo->get();
+        return Inertia::render('Orders/Index', [
+            "orders" => Order::with('user')->orderBy('id', 'DESC')->paginate(5)
+        ]);
     }
 
     /**
@@ -42,10 +48,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
-        $product = $this->repo->create($request->validated());
-        return $this->success($product,'successfully created');
+
     }
 
     /**
@@ -56,7 +61,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+
+        return Inertia::render('Orders/Show', [
+            "order" => Order::with('user','items')->where('id',$id)->first()
+        ]);
     }
 
     /**
@@ -67,19 +75,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
     }
 
     /**
@@ -90,6 +90,5 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 }

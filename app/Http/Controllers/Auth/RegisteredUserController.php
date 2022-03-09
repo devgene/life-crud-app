@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
@@ -47,6 +50,12 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        try{
+            event(new UserCreated($user));
+        }
+        catch(Exception $e){
+            Log::debug('email::'.$e);
+        }
 
         Auth::login($user);
 

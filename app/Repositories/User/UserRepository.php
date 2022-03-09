@@ -1,20 +1,14 @@
 <?php
 
-namespace App\Repositories\Eloquent;
+namespace App\Repositories\User;
 
-use App\Http\Resources\UserResource;
-use App\Models\CategoriesAdvertiser;
-use App\Models\CategoriesCoach;
-use App\Models\CategoriesConsultant;
-use App\Models\CategoriesProvider;
-use App\Models\PasswordReset;
+use App\Events\UserCreated;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Repositories\Service\AbstractModelRepository;
+use App\Repositories\Serviceclass\AbstractModelRepository;
 use App\Repositories\User\IUser;
+use Exception;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends AbstractModelRepository implements IUser
 {
@@ -26,4 +20,16 @@ class UserRepository extends AbstractModelRepository implements IUser
 
 
 
+    public function register( $request ){
+
+        $user= $this->model->create($request);
+        try{
+            Event::dispatch(new UserCreated($user));
+        }
+        catch(Exception $e){
+            Log::debug('email::'.$e);
+        }
+
+        return $user;
+    }
 }

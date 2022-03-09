@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Models\Product;
 use App\Repositories\Product\IProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+
 
     private $repo;
 
@@ -24,7 +29,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $this->repo->get();
+        return Inertia::render('Products/Index', [
+            "products" => Product::orderBy('id', 'DESC')->paginate(5)
+        ]);
     }
 
     /**
@@ -34,18 +41,15 @@ class ProductController extends Controller
      */
     public function create()
     {
+        return Inertia::render('Products/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreProductRequest $request)
     {
-        $product = $this->repo->create($request->validated());
-        return $this->success($product,'successfully created');
+
+        $this->repo->addProduct($request->validated());
+
+        return Redirect::route('products.index');
     }
 
     /**
@@ -67,19 +71,17 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        return Inertia::render('Products/Edit', [
+            'product' => Product::findOrFail($id)
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $data = $request->validated();
+        $product->update($data);
+
+        return Redirect::route('products.index');
     }
 
     /**
@@ -90,6 +92,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $product= $this->repo->find($id);
+       $product->delete();
+
+       return Redirect::route('products.index');
     }
 }

@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Repositories\Order\IOrder;
 use App\Repositories\Product\IProduct;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class OrderApiController extends Controller
 {
 
     private $repo;
 
-    public function __construct(IProduct $repo)
+    public function __construct(IOrder $repo)
     {
         $this->repo = $repo;
     }
@@ -44,8 +45,8 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = $this->repo->create($request->validated());
-        return $this->success($product,'successfully created');
+        $order = $this->repo->create($request->validated());
+        return $this->success($order,'successfully created');
     }
 
     /**
