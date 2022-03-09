@@ -98,6 +98,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $product= $this->repo->find($id);
+       $product->delete();
+
+       return Redirect::route('products.index');
     }
 }
