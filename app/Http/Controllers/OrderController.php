@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Models\Product;
-use App\Repositories\Product\IProduct;
+use App\Models\Order;
+use App\Repositories\Order\IOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
 
 
     private $repo;
 
-    public function __construct(IProduct $repo)
+    public function __construct(IOrder $repo)
     {
         $this->repo = $repo;
     }
@@ -29,8 +28,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Products/Index', [
-            "products" => Product::orderBy('id', 'DESC')->paginate(5)
+        return Inertia::render('Orders/Index', [
+            "orders" => Order::with('user')->orderBy('id', 'DESC')->paginate(5)
         ]);
     }
 
@@ -41,15 +40,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Products/Create');
     }
 
-    public function store(StoreProductRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
 
-        $this->repo->addProduct($request->validated());
-
-        return Redirect::route('products.index');
     }
 
     /**
@@ -60,7 +61,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+
+        return Inertia::render('Orders/Show', [
+            "order" => Order::with('user','items')->where('id',$id)->first()
+        ]);
     }
 
     /**
@@ -71,17 +75,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return Inertia::render('Products/Edit', [
-            'product' => Product::findOrFail($id)
-        ]);
+
     }
 
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request)
     {
-        $data = $request->validated();
-        $product->update($data);
-
-        return Redirect::route('products.index');
     }
 
     /**
@@ -92,9 +90,5 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-       $product= $this->repo->find($id);
-       $product->delete();
-
-       return Redirect::route('products.index');
     }
 }
