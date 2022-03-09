@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,12 +34,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// Route::get('/products', [ProductController::class, 'index'])->middleware(['auth', 'verified'])->name('index');
-
-// Route::get('/product/{id}', [ProductController::class, 'edit'])->middleware(['auth', 'verified'])->name('products.edit');
-// Route::put('/product/{id}', [ProductController::class, 'update'])->middleware(['auth', 'verified'])->name('products.update');
-
 Route::resource('products', ProductController::class);
+Route::resource('users', UserController::class);
 
 
 require __DIR__.'/auth.php';

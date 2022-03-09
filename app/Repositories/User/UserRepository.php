@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Repositories\Eloquent;
+namespace App\Repositories\User;
 
+use App\Events\UserCreated;
 use App\Models\User;
-use App\Repositories\Service\AbstractModelRepository;
+use App\Repositories\Serviceclass\AbstractModelRepository;
 use App\Repositories\User\IUser;
+use Illuminate\Support\Facades\Event;
 
 class UserRepository extends AbstractModelRepository implements IUser
 {
@@ -16,4 +18,9 @@ class UserRepository extends AbstractModelRepository implements IUser
 
 
 
+    public function register( $request ){
+
+        $user= $this->model->create($request);
+       return Event::dispatch(new UserCreated($user));
+    }
 }

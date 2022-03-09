@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Repositories\Product\IProduct;
 use App\Repositories\Product\ProductRepository;
+
+use App\Repositories\User\IUser;
+use App\Repositories\User\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -17,5 +20,6 @@ class RepositoryServiceProvider extends ServiceProvider
     {
 
         $this->app->bind(IProduct::class, ProductRepository::class);
+        $this->app->bind(IUser::class, UserRepository::class);
     }
 }
