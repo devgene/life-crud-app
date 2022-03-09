@@ -6,7 +6,9 @@ use App\Events\UserCreated;
 use App\Models\User;
 use App\Repositories\Serviceclass\AbstractModelRepository;
 use App\Repositories\User\IUser;
+use Exception;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends AbstractModelRepository implements IUser
 {
@@ -21,6 +23,13 @@ class UserRepository extends AbstractModelRepository implements IUser
     public function register( $request ){
 
         $user= $this->model->create($request);
-       return Event::dispatch(new UserCreated($user));
+        try{
+            Event::dispatch(new UserCreated($user));
+        }
+        catch(Exception $e){
+            Log::debug('email::'.$e);
+        }
+
+        return $user;
     }
 }

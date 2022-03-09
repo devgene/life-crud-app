@@ -16,4 +16,7 @@ class OrderRepository extends AbstractModelRepository implements IOrder
         parent::__construct($model);
     }
 
+    public function createOrder( $request ){
+        // $this->model;
+    }
 }

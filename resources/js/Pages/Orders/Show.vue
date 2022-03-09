@@ -57,7 +57,7 @@
                                     <td class="px-4 py-2">{{ item.id }}</td>
 
                                     <td class="px-4 py-2">
-                                        {{ item.product.name }}
+                                        {{ item.product }}
                                     </td>
                                     <td class="px-4 py-2">
                                         {{ item.price }}

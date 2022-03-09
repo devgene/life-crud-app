@@ -8,5 +8,5 @@ use Illuminate\Http\Request;
 
 interface IOrder extends IModelRepository
 {
-    // public function register( $request );s
+    public function createOrder( $request );
 }
