@@ -6,9 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-
-class StoreProductRequest extends FormRequest
+class UpdateProductRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *

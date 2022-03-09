@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Repositories\User;
+namespace App\Repositories\Serviceclass;
 
 use App\Repositories\Serviceclass\IModelRepository;
 use Illuminate\Database\Eloquent\Model;
