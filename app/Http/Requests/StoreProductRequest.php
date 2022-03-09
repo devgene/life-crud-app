@@ -30,7 +30,7 @@ class StoreProductRequest extends FormRequest
             'name'=>'required',
             'description'=>'required',
             'price'=>'required',
-            'image'=>'nullable',
+            'image'=>'required|image|mimes:jpeg,jpg,png,gif,svg|max:2048',
         ];
     }
 

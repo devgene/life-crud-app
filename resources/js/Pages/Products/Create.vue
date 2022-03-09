@@ -69,6 +69,38 @@
                                     "
                                 />
                             </div>
+
+                            <div>
+                                <label for="File">File Upload</label>
+                                <input
+                                    type="file"
+                                    @change="previewImage"
+                                    ref="photo"
+                                    class="
+                                        w-full
+                                        px-4
+                                        py-2
+                                        mt-2
+                                        border
+                                        rounded-md
+                                        focus:outline-none
+                                        focus:ring-1
+                                        focus:ring-blue-600
+                                    "
+                                />
+                                <img
+                                    v-if="url"
+                                    :src="url"
+                                    class="w-full mt-4 h-80"
+                                />
+                                <div
+                                    v-if="errors.image"
+                                    class="font-bold text-red-600"
+                                >
+                                    {{ errors.image }}
+                                </div>
+
+                            </div>
                             <!-- submit -->
                             <div class="flex items-center mt-4">
                                 <button
@@ -101,18 +133,36 @@ export default {
         BreezeAuthenticatedLayout,
         Head,
     },
+    props: {
+        errors: Object,
+    },
+    data() {
+        return {
+        url: null,
+        }
+    },
     setup() {
         const form = useForm({
             name: null,
             description: null,
             price: null,
+            image: null,
         });
 
         return { form };
     },
     methods: {
         submit() {
+
+             if (this.$refs.photo) {
+                this.form.image = this.$refs.photo.files[0];
+            }
+
             this.form.post(route("products.store"));
+        },
+         previewImage(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
         },
     },
 };

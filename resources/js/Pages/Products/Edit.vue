@@ -41,6 +41,11 @@
                   <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
                   <input type="text" v-model="form.price" name="price" id="price" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
+                 <div>
+                    <label for="File">File Upload</label>
+                        <input type="file" @change="previewImage" ref="photo" class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"/>
+                           <img v-if="product" :src="product.image" class="w-full mt-4 h-80" />
+                </div>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -70,22 +75,38 @@ export default {
         Head,
         Link,
     },
-  setup (props) {
+
+   props: {
+        product: Object,
+    },
+    data() {
+        return {
+        url: null,
+        }
+    },
+    setup (props) {
 
     const form = useForm({
       name: props.product.name,
       description: props.product.description,
       price: props.product.price,
+      image: props.product.image,
     })
 
     return { form }
    },
-   props: {
-        product: Object,
-    },
     methods: {
+
         submit() {
+             if (this.$refs.photo) {
+                this.form.image = this.$refs.photo.files[0];
+            }
+
             this.form.put(route("products.update", this.product.id));
+        },
+           previewImage(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
         },
     },
 }
